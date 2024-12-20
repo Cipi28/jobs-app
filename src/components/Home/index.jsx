@@ -1,41 +1,52 @@
-// export const Home = () => {
-//     return (
-//         <>
-//             Home
-//         </>
-//     )
-// }
-
 import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import {
-  Icon,
   Input,
   Button,
   Flex,
-  useDisclosure,
-  Heading,
   Box,
   Text,
 } from '@chakra-ui/react';
-import {JobCard} from '../JobCard';
+import {CompanyCard} from '../CompanyCard';
 import {Footer} from '../Footer';
-
-const activeBookings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export const Home = () => {
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
-//   const [centerInfo, setCenterInfo] = useState(window.innerWidth >= 1099);
+  const [companies, setCompanies] = useState([]);
 
-//   useEffect(() => {
-//     const handleResize = () => {
-//       setShowFirstDiv(window.innerWidth >= 700);
-//       setCenterInfo(window.innerWidth >= 1099);
-//     };
-//     window.addEventListener('resize', handleResize);
-//     return () => {
-//       window.removeEventListener('resize', handleResize);
-//     };
-//   }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setShowFirstDiv(window.innerWidth >= 700);
+      setCenterInfo(window.innerWidth >= 1099);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+
+  }, []);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/v1/companies', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setCompanies(response.data);
+        console.log('Companies:', response.data);
+      } catch (error) {
+        //todo: handle error
+        console.error('Error fetching companies:', error);
+      }
+    };
+
+    fetchCompanies();
+
+  }, []);
+
 
   return (
     <>
@@ -43,15 +54,11 @@ export const Home = () => {
         style={{
           display: 'flex',
           height: 'auto',
-          // justifyContent: 'center',
-          // alignItems: 'center',
         }}
       >
         {showFirstDiv && (
           <div style={{ width: '200px', flexShrink: 0 }}>
             {' '}
-            {/* Added flexShrink: 0 */}
-            {/* Content for the first div */}
           </div>
         )}
         <Box
@@ -59,7 +66,6 @@ export const Home = () => {
           maxWidth="700px"
           mx={7}
           textAlign={showFirstDiv ? 'left' : 'center'}
-          // alignItems="center"
         >
           <Text color={'red'} fontWeight="bold" fontSize={'5xl'} opacity={0.7}>
             Gaseste jobul potrivit pentru tine
@@ -110,8 +116,6 @@ export const Home = () => {
         {showFirstDiv && (
           <div style={{ width: '200px', flexShrink: 0 }}>
             {' '}
-            {/* Added flexShrink: 0 */}
-            {/* Content for the first div */}
           </div>
         )}
       </div>
@@ -125,8 +129,6 @@ export const Home = () => {
         {showFirstDiv && (
           <div style={{ width: '200px', flexShrink: 0 }}>
             {' '}
-            {/* Added flexShrink: 0 */}
-            {/* Content for the first div */}
           </div>
         )}
         <Box borderRadius="lg" overflow="hidden" mb={10}>
@@ -144,9 +146,12 @@ export const Home = () => {
             Locuri de munca in 42 de domenii. Deswcopera cele mai noi joburi
           </Text>
           <Flex alignItems="center" wrap="wrap" mb={10}>
-            {activeBookings.map(booking => (
-                <Box width="300px" mx="auto" className="job-card">
-                  <JobCard />
+            {companies.map((company, index) => (
+                <Box width="300px" mx="auto" className="job-card" key={index} >
+                  <CompanyCard
+                      key={index}
+                      company={company}
+                  />
                 </Box>
               ))}
           </Flex>
@@ -154,8 +159,6 @@ export const Home = () => {
         {showFirstDiv && (
           <div style={{ width: '200px', flexShrink: 0 }}>
             {' '}
-            {/* Added flexShrink: 0 */}
-            {/* Content for the first div */}
           </div>
         )}
       </div>

@@ -34,7 +34,7 @@ import {
 
 export const AppHeader = () => {
   const LinkItems = [
-    { name: 'Acasa', icon: FiHome, href: '/' },
+    { name: 'Acasa', icon: FiHome, href: '/jobs-app/' },
     { name: 'Joburi', icon: FiActivity, href: '/jobs' },
     { name: 'Profile', icon: FiUser, href: '/profile' },
   ];
@@ -204,7 +204,7 @@ export const AppHeader = () => {
                 as="a"
                 href="#"
                 onClick={() => {
-                  window.history.pushState({}, '', '/login');
+                  window.history.pushState({}, '', '/jobs-app/login');
                 }}
               >
                 Sign out

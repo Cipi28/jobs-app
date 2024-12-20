@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./configs/AppRoutes";
 import { ChakraProvider } from '@chakra-ui/react'
 import './index.css'
+import './tailwind.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
