@@ -1,13 +1,9 @@
 import React from 'react';
+import {BASE_ROUTE} from "@/App";
 import {
   FiActivity,
-  FiBell,
   FiChevronDown,
-  FiBookOpen,
-  FiCompass,
-  FiHeart,
   FiHome,
-  FiLogOut,
   FiMenu,
   FiUser,
 } from 'react-icons/fi';
@@ -34,9 +30,9 @@ import {
 
 export const AppHeader = () => {
   const LinkItems = [
-    { name: 'Acasa', icon: FiHome, href: '/jobs-app/' },
-    { name: 'Joburi', icon: FiActivity, href: '/jobs' },
-    { name: 'Profile', icon: FiUser, href: '/profile' },
+    { name: 'Acasa', icon: FiHome, href: `${BASE_ROUTE}` },
+    { name: 'Joburi', icon: FiActivity, href: `${BASE_ROUTE}jobs` },
+    { name: 'Profile', icon: FiUser, href: `${BASE_ROUTE}profile` },
   ];
 
   const SidebarContent = ({ onClose, ...rest }) => (
@@ -204,7 +200,7 @@ export const AppHeader = () => {
                 as="a"
                 href="#"
                 onClick={() => {
-                  window.history.pushState({}, '', '/jobs-app/login');
+                  window.history.pushState({}, '', `${BASE_ROUTE}login`);
                 }}
               >
                 Sign out

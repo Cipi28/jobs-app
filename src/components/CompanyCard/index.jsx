@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import {Link} from "react-router-dom";
 import {FaStar} from "react-icons/fa";
+import {BASE_ROUTE} from "../../App.jsx";
 
 
 export const CompanyCard = (props) => {
@@ -19,7 +20,7 @@ export const CompanyCard = (props) => {
 
   console.log("Company", company);
   return (
-    <Link to={`/jobs-app/company/${company.id}`}>
+    <Link to={`${BASE_ROUTE}company/${company.id}`}>
       <Center py={6} >
         <Box
             mx={4}

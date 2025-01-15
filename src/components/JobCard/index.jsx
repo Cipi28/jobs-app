@@ -1,10 +1,11 @@
 import React from 'react';
 import { Box, Image, Text } from '@chakra-ui/react';
 import {Link} from "react-router-dom";
+import {BASE_ROUTE} from "../../App.jsx";
 
 const JobCard = ({ job }) => {
     return (
-        <Link to={`/jobs-app/job/${job.id}`}>
+        <Link to={`${BASE_ROUTE}job/${job.id}`}>
             <Box
                 borderWidth="1px"
                 borderRadius="md"

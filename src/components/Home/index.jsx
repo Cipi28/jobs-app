@@ -162,7 +162,6 @@ export const Home = () => {
           </div>
         )}
       </div>
-      <Footer />
     </>
   );
 }
