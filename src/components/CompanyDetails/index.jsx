@@ -47,7 +47,6 @@ export const CompanyDetails = () => {
 
                 setCompany(response.data);
                 setJobs(responseJobs.data);
-                console.log("data", responseJobs.data, response.data);
             } catch (error) {
                 console.error('Error fetching company details:', error);
             }

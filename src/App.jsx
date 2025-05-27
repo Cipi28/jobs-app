@@ -1,7 +1,7 @@
 import {Outlet} from "react-router-dom";
 import './App.css'
 
-export const BASE_ROUTE = '/jobs-app/';
+export const BASE_ROUTE = '/';
 
 function App() {
     return (

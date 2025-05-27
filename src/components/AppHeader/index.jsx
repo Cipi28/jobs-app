@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fi';
 import {
   Avatar,
-  Box,
+  Box, Button,
   CloseButton,
   Drawer,
   DrawerContent,
@@ -101,116 +101,147 @@ export const AppHeader = () => {
     </Box>
   );
 
-  const MobileNav = ({ onOpen, ...rest }) => (
-    <Flex
-      // ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 4 }}
-      height="20"
-      alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
-      backgroundColor={useColorModeValue('white', 'gray.900')}
-      borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-      justifyContent={{ base: 'space-between', md: 'space-between' }}
-      {...rest}
-    >
-      <Box display={{ base: 'none', md: 'flex' }}>
-        <Text
-          // display={{ base: 'space-between', md: 'flex' }}
-          fontSize="2xl"
-          fontFamily="monospace"
-          fontWeight="bold"
-          mt={2}
-          ml={4}
-          mr={10}
+  const MobileNav = ({ onOpen, ...rest }) => {
+    //get user info from localstorage
+    const user = JSON.parse(localStorage.getItem('user'));
+    console.log("test", user);
+
+    return (
+        <Flex
+            // ml={{ base: 0, md: 60 }}
+            px={{ base: 4, md: 4 }}
+            height="20"
+            alignItems="center"
+            bg={useColorModeValue('white', 'gray.900')}
+            backgroundColor={useColorModeValue('white', 'gray.900')}
+            borderBottomWidth="1px"
+            borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+            justifyContent={{ base: 'space-between', md: 'space-between' }}
+            {...rest}
         >
-          LOGO
-        </Text>
-        {LinkItems.map(link => (
-          <NavItem
-            // mt={4}
-            key={link.name}
-            icon={link.icon}
-            onClick={() => window.history.pushState({}, '', link.href)}
-          >
-            {link.name}
-          </NavItem>
-        ))}
-      </Box>
-
-      <IconButton
-        display={{ base: 'flex', md: 'none' }}
-        onClick={onOpen}
-        variant="outline"
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
-
-      <Text
-        display={{ base: 'flex', md: 'none' }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold"
-      >
-        LOGO
-      </Text>
-
-      <HStack spacing={{ base: '0', md: '6' }}>
-        {/*<IconButton*/}
-        {/*  size="lg"*/}
-        {/*  variant="ghost"*/}
-        {/*  aria-label="open menu"*/}
-        {/*  icon={<FiBell />}*/}
-        {/*/>*/}
-        <Flex alignItems="center">
-          <Menu>
-            <MenuButton
-              py={2}
-              transition="all 0.3s"
-              _focus={{ boxShadow: 'none' }}
+          <Box display={{ base: 'none', md: 'flex' }}>
+            <Text
+                // display={{ base: 'space-between', md: 'flex' }}
+                fontSize="2xl"
+                fontFamily="monospace"
+                fontWeight="bold"
+                mt={2}
+                ml={4}
+                mr={10}
             >
-              <HStack>
-                <Avatar
-                  size="md"
-                  src="https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                />
-                <VStack
-                  display={{ base: 'none', md: 'flex' }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2"
+              LOGO
+            </Text>
+            {LinkItems.map(link => (
+                <NavItem
+                    // mt={4}
+                    key={link.name}
+                    icon={link.icon}
+                    onClick={() => window.history.pushState({}, '', link.href)}
                 >
-                  <Text fontSize="sm">Manea Ciprian</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    User
-                  </Text>
-                </VStack>
-                <Box display={{ base: 'none', md: 'flex' }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </MenuButton>
-            <MenuList
-              bg={useColorModeValue('white', 'gray.900')}
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            >
-              <MenuItem>Profile</MenuItem>
-              <MenuDivider />
-              <MenuItem
-                as="a"
-                href="#"
-                onClick={() => {
-                  window.history.pushState({}, '', `${BASE_ROUTE}login`);
-                }}
-              >
-                Sign out
-              </MenuItem>
-            </MenuList>
-          </Menu>
+                  {link.name}
+                </NavItem>
+            ))}
+          </Box>
+
+          <IconButton
+              display={{ base: 'flex', md: 'none' }}
+              onClick={onOpen}
+              variant="outline"
+              aria-label="open menu"
+              icon={<FiMenu />}
+          />
+
+          <Text
+              display={{ base: 'flex', md: 'none' }}
+              fontSize="2xl"
+              fontFamily="monospace"
+              fontWeight="bold"
+          >
+            LOGO
+          </Text>
+
+          <HStack spacing={{ base: '0', md: '6' }}>
+            {/*<IconButton*/}
+            {/*  size="lg"*/}
+            {/*  variant="ghost"*/}
+            {/*  aria-label="open menu"*/}
+            {/*  icon={<FiBell />}*/}
+            {/*/>*/}
+            <Flex alignItems="center">
+              {user ?
+              <Menu>
+                <MenuButton
+                    py={2}
+                    transition="all 0.3s"
+                    _focus={{ boxShadow: 'none' }}
+                >
+                      <HStack>
+                        <Avatar
+                            size="md"
+                            src="https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                        />
+                        <VStack
+                            display={{ base: 'none', md: 'flex' }}
+                            alignItems="flex-start"
+                            spacing="1px"
+                            ml="2"
+                        >
+                          <Text fontSize="sm">{user.first_name} {user.last_name}</Text>
+                          <Text fontSize="xs" color="gray.600">
+                            User
+                          </Text>
+                        </VStack>
+                        <Box display={{ base: 'none', md: 'flex' }}>
+                          <FiChevronDown />
+                        </Box>
+                      </HStack>
+                </MenuButton>
+                <MenuList
+                    bg={useColorModeValue('white', 'gray.900')}
+                    borderColor={useColorModeValue('gray.200', 'gray.700')}
+                >
+                  <MenuItem>Profile</MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                      as="a"
+                      href="#"
+                      onClick={() => {
+                        localStorage.removeItem('user');
+                        localStorage.removeItem('token');
+                        window.history.pushState({}, '', `${BASE_ROUTE}login`);
+                      }}
+                  >
+                    Sign out
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+              :
+              <Box>
+                <Button
+                    w="100%"
+                    bg={'red.400'}
+                    color={'white'}
+                    rounded={'3xl'}
+                    boxShadow={'0 5px 20px 0px rgba(139, 0, 0, 0.7)'}
+                    _hover={{
+                      bg: 'red.500',
+                    }}
+                    _focus={{
+                      bg: 'red.500',
+                    }}
+                    as="a"
+                    href="#"
+                    onClick={() => window.history.pushState({}, '', `${BASE_ROUTE}login`)}
+                >
+                  Conecteaza-te
+                </Button>
+              </Box>
+              }
+            </Flex>
+          </HStack>
         </Flex>
-      </HStack>
-    </Flex>
-  );
+    );
+  }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 

@@ -36,7 +36,6 @@ export const Home = () => {
           }
         });
         setCompanies(response.data);
-        console.log('Companies:', response.data);
       } catch (error) {
         //todo: handle error
         console.error('Error fetching companies:', error);

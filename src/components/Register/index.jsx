@@ -19,31 +19,37 @@ import { faGoogle, faApple, faFacebook } from "@fortawesome/free-brands-svg-icon
 import { Link } from "react-router-dom";
 import {BASE_ROUTE} from "../../App.jsx";
 
-export const Login = () => {
+export const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const toast = useToast();
+    const [userData, setUserdata] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        city: '',
+    });
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/v1/login", {
-                email,
-                password,
-            });
+            const response = await axios.post("http://127.0.0.1:8000/api/v1/register", userData);
 
-            // Save user and token in localStorage
             localStorage.setItem("user", JSON.stringify(response.data.data.user));
             localStorage.setItem("token", response.data.meta.token);
 
-            // Redirect to homepage
             window.location.href = "/";
         } catch (error) {
+            console.log("ERROR", error.response.data['firstName']);
             toast({
                 title: "Login Failed",
                 description: error.response.data.error ||
+                    error.response.data.firstName ||
+                    error.response.data.lastName ||
                     error.response.data.email ||
                     error.response.data.password ||
-                    "Invalid credentials",
+                    error.response.data.city ||
+                    "Invalid data",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -53,14 +59,30 @@ export const Login = () => {
 
     const loginForm = () => {
         return (
-            <VStack spacing={4} align="stretch" px={8}>
+            <VStack spacing={5} align="stretch" px={8}>
+                <Input
+                    placeholder="Nume"
+                    size="lg"
+                    variant="filled"
+                    focusBorderColor="red.500"
+                    value={userData.firstName}
+                    onChange={(e) => setUserdata({ ...userData, firstName: e.target.value })}
+                />
+                <Input
+                    placeholder="Prenume"
+                    size="lg"
+                    variant="filled"
+                    focusBorderColor="red.500"
+                    value={userData.lastName}
+                    onChange={(e) => setUserdata({ ...userData, lastName: e.target.value })}
+                />
                 <Input
                     placeholder="Adresa email"
                     size="lg"
                     variant="filled"
                     focusBorderColor="red.500"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={userData.email}
+                    onChange={(e) => setUserdata({ ...userData, email: e.target.value })}
                 />
                 <Input
                     placeholder="Parolă"
@@ -68,8 +90,17 @@ export const Login = () => {
                     size="lg"
                     variant="filled"
                     focusBorderColor="red.500"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={userData.password}
+                    onChange={(e) => setUserdata({ ...userData, password: e.target.value })}
+                />
+                <Input
+                    placeholder="Oras"
+                    size="lg"
+                    variant="filled"
+                    focusBorderColor="red.500"
+                    value={userData.city}
+                    onChange={(e) => setUserdata({ ...userData, city: e.target.value })}
+                />
                 />
                 <Text align="right" fontSize="sm" color="red.500" cursor="pointer">
                     Am uitat parola
@@ -82,7 +113,8 @@ export const Login = () => {
                     _hover={{ bg: "red.400" }}
                     onClick={handleLogin}
                 >
-                    Intră în cont
+                    Inregistrează-te
+                    Inregistrează-te
                 </Button>
 
                 <HStack align="center">
@@ -106,9 +138,9 @@ export const Login = () => {
                 </HStack>
 
                 <Text fontSize="sm" align="center" color="gray.500" mt={3}>
-                    Nu ai cont?{" "}
+                    Ai deja un cont?{" "}
                     <Text as="span" color="red.500" fontWeight="bold" cursor="pointer">
-                        <Link to={`${BASE_ROUTE}register`}>Creează acum un cont nou</Link>
+                        <Link to={`${BASE_ROUTE}login`}>Conectează-te acum</Link>
                     </Text>
                 </Text>
             </VStack>
@@ -141,7 +173,7 @@ export const Login = () => {
                 {/* Left Section */}
                 <Box flex="1" textAlign={{ base: "center", lg: "left" }} py={10}>
                     <Text fontSize="4xl" fontWeight="bold" color="red.500">
-                        Conectează-te pentru a începe
+                        Înregistrează-te pentru a începe
                     </Text>
                     <Text fontSize="lg" mt={4} color="gray.500">
                         Caută jobul potrivit pentru tine!

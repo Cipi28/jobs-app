@@ -17,8 +17,6 @@ import {BASE_ROUTE} from "../../App.jsx";
 export const CompanyCard = (props) => {
 
   const { company } = props;
-
-  console.log("Company", company);
   return (
     <Link to={`${BASE_ROUTE}company/${company.id}`}>
       <Center py={6} >
