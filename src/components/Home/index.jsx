@@ -30,7 +30,7 @@ export const Home = () => {
     const fetchCompanies = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/v1/companies', {
+        const response = await axios.get('https://jobs-api-1pqa.onrender.com/api/v1/companies', {
           headers: {
             Authorization: `Bearer ${token}`
           }

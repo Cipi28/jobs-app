@@ -20,7 +20,7 @@ export const JobDetails = () => {
     useEffect(() => {
         const fetchJobDetails = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/v1/jobs/${jobId}`);
+                const response = await axios.get(`https://jobs-api-1pqa.onrender.com/api/v1/jobs/${jobId}`);
                 setJob(response.data);
             } catch (error) {
                 console.error("Error fetching job details:", error);
