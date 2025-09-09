@@ -28,7 +28,7 @@ export const CompanyDetails = () => {
             const token = localStorage.getItem('token');
             try {
                 const response = await axios.get(
-                    `https://jobs-api-1pqa.onrender.com/api/v1/companies/${companyId}`,
+                    `http://localhost:8000/api/v1/companies/${companyId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ export const CompanyDetails = () => {
                 );
 
                 const responseJobs = await axios.get(
-                    `https://jobs-api-1pqa.onrender.com/api/v1/companies/${companyId}/jobs`,
+                    `http://localhost:8000/api/v1/companies/${companyId}/jobs`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
