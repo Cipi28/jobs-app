@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
 import {
     Box,
     Button,
@@ -33,7 +34,7 @@ export const Register = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://localhost:8000/api/v1/register", userData);
+            const response = await axios.post(createApiUrl(API_ENDPOINTS.REGISTER), userData);
 
             localStorage.setItem("user", JSON.stringify(response.data.data.user));
             localStorage.setItem("token", response.data.meta.token);

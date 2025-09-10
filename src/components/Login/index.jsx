@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
 import {
     Box,
     Button,
@@ -26,7 +27,7 @@ export const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://localhost:8000/api/v1/login", {
+            const response = await axios.post(createApiUrl(API_ENDPOINTS.LOGIN), {
                 email,
                 password,
             });

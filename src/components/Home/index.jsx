@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
+import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
 import {
   Input,
   Button,
@@ -30,7 +31,7 @@ export const Home = () => {
     const fetchCompanies = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:8000/api/v1/companies', {
+        const response = await axios.get(createApiUrl(API_ENDPOINTS.COMPANIES), {
           headers: {
             Authorization: `Bearer ${token}`
           }

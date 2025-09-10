@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
+import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
 import {
     Box,
     Text,
@@ -28,7 +29,7 @@ export const CompanyDetails = () => {
             const token = localStorage.getItem('token');
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/companies/${companyId}`,
+                    createApiUrl(API_ENDPOINTS.COMPANY_DETAILS(companyId)),
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -37,7 +38,7 @@ export const CompanyDetails = () => {
                 );
 
                 const responseJobs = await axios.get(
-                    `http://localhost:8000/api/v1/companies/${companyId}/jobs`,
+                    createApiUrl(API_ENDPOINTS.COMPANY_JOBS(companyId)),
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
