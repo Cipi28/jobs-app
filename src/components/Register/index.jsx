@@ -33,7 +33,7 @@ export const Register = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://localhost:8000/api/v1/register", userData);
+            const response = await axios.post("https://jobs-api-1pqa.onrender.com/api/v1/register", userData);
 
             localStorage.setItem("user", JSON.stringify(response.data.data.user));
             localStorage.setItem("token", response.data.meta.token);
