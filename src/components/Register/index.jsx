@@ -62,6 +62,8 @@ export const Register = () => {
                 status: "error",
                 duration: 3000,
                 isClosable: true,
+            }
+            )
           emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}`
         }
     };
