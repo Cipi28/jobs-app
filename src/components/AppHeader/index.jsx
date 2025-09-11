@@ -1,5 +1,6 @@
 import React from 'react';
 import { authApi } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import {BASE_ROUTE} from "@/App";
 import {
   FiActivity,

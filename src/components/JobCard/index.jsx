@@ -28,7 +28,7 @@ const JobCard = ({ job }) => {
                         {job.name}
                     </Text>
                     <Text fontSize="sm" color="gray.600" mb={2}>
-                        {JSON.parse(job.work_mode).type}
+                        {job.work_mode.type}
                     </Text>
                     <Text fontSize="sm" fontWeight="bold" color="red.500">
                         {job.location}

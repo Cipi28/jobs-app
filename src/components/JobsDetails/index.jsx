@@ -76,7 +76,7 @@ export const JobDetails = () => {
                         </HStack>
                         <HStack spacing={2}>
                             <Icon as={FaClock} color="gray.500" />
-                            <Text>Work Mode: {JSON.parse(job.work_mode).type}</Text>
+                            <Text>Work Mode: {job.work_mode.type}</Text>
                         </HStack>
                         <Divider />
                         <VStack spacing={4} alignItems="start">
@@ -139,7 +139,7 @@ export const JobDetails = () => {
                         </Text>
                         <VStack align="start" spacing={1}>
                             <HStack spacing={4} wrap="wrap">
-                                {JSON.parse(job.aptitudes || "[]").map((aptitude, index) => (
+                                {(job.aptitudes || []).map((aptitude, index) => (
                                     <Box
                                         key={index}
                                         as="span"
