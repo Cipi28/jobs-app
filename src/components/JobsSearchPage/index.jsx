@@ -4,11 +4,43 @@ import {
     DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Tag, Image, Badge
 } from "@chakra-ui/react";
 import { FaFilter, FaHeart, FaEye } from "react-icons/fa";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { jobsApi } from '../../lib/supabase';
+import JobCard from "../JobCard/index.jsx";
 
 export const JobsSearchPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const isMobile = window.innerWidth < 768;
+    const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        totalCount: 0,
+        totalPages: 0
+    });
+    const [filters, setFilters] = useState({
+        keywords: '',
+        location: '',
+        department: '',
+        workType: ''
+    });
+
+    const searchJobs = async (page = 1) => {
+        setLoading(true);
+        try {
+            const result = await jobsApi.searchJobs(filters, page, 20);
+            setJobs(result.jobs);
+            setPagination(result.pagination);
+        } catch (error) {
+            console.error('Search failed:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        searchJobs();
+    }, []);
 
     return (
         <Box bg="gray.100" minH="100vh" py={5}>
@@ -16,8 +48,19 @@ export const JobsSearchPage = () => {
                 <VStack spacing={4} align="stretch">
                     {/* Search Bar */}
                     <HStack>
-                        <Input placeholder="Cuvinte cheie" bg="white" />
-                        <Button colorScheme="orange">Caută Job</Button>
+                        <Input 
+                            placeholder="Cuvinte cheie" 
+                            bg="white" 
+                            value={filters.keywords}
+                            onChange={(e) => setFilters({...filters, keywords: e.target.value})}
+                        />
+                        <Button 
+                            colorScheme="orange" 
+                            onClick={() => searchJobs(1)}
+                            isLoading={loading}
+                        >
+                            Caută Job
+                        </Button>
                     </HStack>
 
                     {/* Grid Layout for Filters & Job Listings */}
@@ -68,7 +111,9 @@ export const JobsSearchPage = () => {
 
                             {/* Job Count and Sorting (Inside Job Listings Column) */}
                             <VStack align="stretch" spacing={2} >
-                                <Text fontSize="xl" fontWeight="bold">20761 locuri de munca</Text>
+                                <Text fontSize="xl" fontWeight="bold">
+                                    {pagination.totalCount} locuri de munca
+                                </Text>
                                 <HStack bg="white" p={3} borderRadius="md" boxShadow="sm" justify="space-between">
                                     <Text fontWeight="bold" color="purple.700">Relevanță</Text>
                                     <Text color="purple.500">Dată</Text>
@@ -77,52 +122,36 @@ export const JobsSearchPage = () => {
                             </VStack>
 
                             {/* Job Cards */}
-                            {[1, 2, 3, 4].map((job, index) => (
-                                <Box key={index} bg="white" p={4} boxShadow="md" borderRadius="md">
-                                    <HStack align="start">
-                                        <Image
-                                            src={job.image || 'https://learn.uat.edu/hubfs/Software%20Engineering%20Careers%202.jpg'}
-                                            alt={job.title}
-                                            objectFit="cover"
-                                            w="15%"
-                                            // aspectRatio={5 / 4}
-                                            p={3}
-                                        />
-                                        {/*<Image boxSize="50px" src="/logo.png" alt="Company Logo" />*/}
-                                        <VStack align="start" spacing={1} flex="1">
-                                            <HStack>
-                                                <Text fontSize="sm" color="gray.500">9 Mart. 2025</Text>
-                                                {/*<Badge colorScheme="green">VIDEO</Badge>*/}
-                                            </HStack>
-                                            <Text fontWeight="bold" fontSize="lg">Business Developer - Bucuresti</Text>
-                                            <Text fontWeight="bold" color="gray.700">Coca Cola HBC - Romania</Text>
-                                            <Text fontSize="sm" color="gray.600">Bucuresti</Text>
-                                        </VStack>
-                                    </HStack>
-                                    <HStack justify="space-between" mt={4}>
-                                        <HStack>
-                                            <IconButton icon={<FaHeart />} aria-label="Favorite" variant="ghost" />
-                                        </HStack>
-                                        <Button
-                                            w="20%"
-                                            h={45}
-                                            bg={'red.400'}
-                                            color={'white'}
-                                            rounded={'3xl'}
-                                            boxShadow={'0 5px 20px 0px rgba(139, 0, 0, 0.7)'}
-                                            _hover={{
-                                                bg: 'red.500',
-                                            }}
-                                            _focus={{
-                                                bg: 'red.500',
-                                            }}
-                                        >
-                                            Aplica rapid
-                                        </Button>
-                                        {/*<Button colorScheme="orange" borderRadius="full" px={6}>Aplică rapid</Button>*/}
-                                    </HStack>
-                                </Box>
+                            {loading ? (
+                                <Text>Loading...</Text>
+                            ) : (
+                                <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={4}>
+                                    {jobs.map((job) => (
+                                        <JobCard key={job.id} job={job} />
+                                    ))}
+                                </Grid>
                             ))}
+
+                            {/* Pagination */}
+                            {pagination.totalPages > 1 && (
+                                <HStack justify="center" mt={6}>
+                                    <Button 
+                                        disabled={!pagination.hasPrevPage}
+                                        onClick={() => searchJobs(pagination.currentPage - 1)}
+                                    >
+                                        Previous
+                                    </Button>
+                                    <Text>
+                                        Page {pagination.currentPage} of {pagination.totalPages}
+                                    </Text>
+                                    <Button 
+                                        disabled={!pagination.hasNextPage}
+                                        onClick={() => searchJobs(pagination.currentPage + 1)}
+                                    >
+                                        Next
+                                    </Button>
+                                </HStack>
+                            )}
                         </VStack>
                     </Grid>
                 </VStack>

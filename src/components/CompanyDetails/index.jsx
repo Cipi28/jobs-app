@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {useParams} from 'react-router-dom';
-import axios from 'axios';
-import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
+import { companiesApi } from '../../lib/supabase';
 import {
     Box,
     Text,
@@ -26,28 +25,14 @@ export const CompanyDetails = () => {
 
     useEffect(() => {
         const fetchCompanyDetails = async () => {
-            const token = localStorage.getItem('token');
             try {
-                const response = await axios.get(
-                    createApiUrl(API_ENDPOINTS.COMPANY_DETAILS(companyId)),
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                const [companyData, jobsData] = await Promise.all([
+                    companiesApi.getCompany(companyId),
+                    companiesApi.getCompanyJobs(companyId)
+                ]);
 
-                const responseJobs = await axios.get(
-                    createApiUrl(API_ENDPOINTS.COMPANY_JOBS(companyId)),
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                setCompany(response.data);
-                setJobs(responseJobs.data);
+                setCompany(companyData);
+                setJobs(jobsData);
             } catch (error) {
                 console.error('Error fetching company details:', error);
             }

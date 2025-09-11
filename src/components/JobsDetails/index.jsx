@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
+import { jobsApi } from '../../lib/supabase';
 import {
     Box,
     Text,
@@ -21,8 +20,8 @@ export const JobDetails = () => {
     useEffect(() => {
         const fetchJobDetails = async () => {
             try {
-                const response = await axios.get(createApiUrl(API_ENDPOINTS.JOB_DETAILS(jobId)));
-                setJob(response.data);
+                const jobData = await jobsApi.getJob(jobId);
+                setJob(jobData);
             } catch (error) {
                 console.error("Error fetching job details:", error);
             }

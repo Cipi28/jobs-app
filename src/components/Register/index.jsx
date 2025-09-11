@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
+import { authApi } from '../../lib/supabase';
 import {
     Box,
     Button,
@@ -34,23 +33,24 @@ export const Register = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(createApiUrl(API_ENDPOINTS.REGISTER), userData);
+            const { user, session } = await authApi.signUp(userData.email, userData.password, {
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                city: userData.city
+            });
 
-            localStorage.setItem("user", JSON.stringify(response.data.data.user));
-            localStorage.setItem("token", response.data.meta.token);
+            // Get user profile
+            const profile = await authApi.getUserProfile();
+            
+            // Save user data in localStorage for compatibility
+            localStorage.setItem("user", JSON.stringify(profile));
+            localStorage.setItem("token", session.access_token);
 
             window.location.href = "/";
         } catch (error) {
-            console.log("ERROR", error.response.data['firstName']);
             toast({
-                title: "Login Failed",
-                description: error.response.data.error ||
-                    error.response.data.firstName ||
-                    error.response.data.lastName ||
-                    error.response.data.email ||
-                    error.response.data.password ||
-                    error.response.data.city ||
-                    "Invalid data",
+                title: "Registration Failed",
+                description: error.message || "Registration failed",
                 status: "error",
                 duration: 3000,
                 isClosable: true,

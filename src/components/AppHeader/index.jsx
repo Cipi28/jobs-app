@@ -1,4 +1,5 @@
 import React from 'react';
+import { authApi } from '../../lib/supabase';
 import {BASE_ROUTE} from "@/App";
 import {
   FiActivity,
@@ -205,7 +206,8 @@ export const AppHeader = () => {
                   <MenuItem
                       as="a"
                       href="#"
-                      onClick={() => {
+                      onClick={async () => {
+                        await authApi.signOut();
                         localStorage.removeItem('user');
                         localStorage.removeItem('token');
                         window.history.pushState({}, '', `${BASE_ROUTE}login`);

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
-import { createApiUrl, API_ENDPOINTS } from '../../configs/api';
+import { companiesApi } from '../../lib/supabase';
 import {
   Input,
   Button,
@@ -29,22 +28,15 @@ export const Home = () => {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(createApiUrl(API_ENDPOINTS.COMPANIES), {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setCompanies(response.data);
+        const companies = await companiesApi.getCompanies();
+        setCompanies(companies);
       } catch (error) {
-        //todo: handle error
         console.error('Error fetching companies:', error);
       }
     };
 
     fetchCompanies();
-
   }, []);
 
 
