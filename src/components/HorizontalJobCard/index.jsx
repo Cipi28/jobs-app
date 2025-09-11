@@ -19,26 +19,38 @@ const HorizontalJobCard = ({ job }) => {
             bg="white"
             borderRadius="lg"
             boxShadow="md"
-            p={6}
+            p={{ base: 4, md: 6 }}
             mb={4}
             _hover={{ boxShadow: "lg", transform: "translateY(-2px)" }}
             transition="all 0.2s"
         >
-            <HStack spacing={6} align="start" minH="120px">
+            <Flex 
+                direction={{ base: "column", md: "row" }}
+                spacing={{ base: 4, md: 6 }} 
+                align={{ base: "stretch", md: "start" }} 
+                minH={{ base: "auto", md: "120px" }}
+                gap={{ base: 4, md: 6 }}
+            >
                 {/* Job Image */}
-                <Box flexShrink={0}>
+                <Box flexShrink={0} alignSelf={{ base: "center", md: "flex-start" }}>
                     <Image
                         src={job.job_image || 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=150&h=100&fit=crop'}
                         alt={job.name}
-                        w="150px"
-                        h="100px"
+                        w={{ base: "100%", sm: "200px", md: "150px" }}
+                        h={{ base: "120px", sm: "100px", md: "100px" }}
+                        maxW={{ base: "300px", md: "150px" }}
                         objectFit="cover"
                         borderRadius="md"
                     />
                 </Box>
 
                 {/* Job Details */}
-                <VStack align="start" spacing={2} flex="1">
+                <VStack 
+                    align={{ base: "center", md: "start" }} 
+                    spacing={2} 
+                    flex="1"
+                    textAlign={{ base: "center", md: "left" }}
+                >
                     {/* Date */}
                     <Text fontSize="md" color="gray.500">
                         {formatDate(job.created_at)}
@@ -47,7 +59,7 @@ const HorizontalJobCard = ({ job }) => {
                     {/* Job Title */}
                     <Link to={`${BASE_ROUTE}job/${job.id}`}>
                         <Text 
-                            fontSize="xl" 
+                            fontSize={{ base: "lg", md: "xl" }}
                             fontWeight="bold" 
                             color="gray.800"
                             _hover={{ color: "red.500" }}
@@ -58,7 +70,7 @@ const HorizontalJobCard = ({ job }) => {
                     </Link>
                     
                     {/* Company Name */}
-                    <Text fontSize="lg" color="gray.700" fontWeight="medium">
+                    <Text fontSize={{ base: "md", md: "lg" }} color="gray.700" fontWeight="medium">
                         {job.company?.name || 'Company Name'}
                     </Text>
                     
@@ -69,7 +81,15 @@ const HorizontalJobCard = ({ job }) => {
                 </VStack>
 
                 {/* Right Side Actions */}
-                <Flex direction="column" align="end" justify="space-between" h="120px" minH="120px">
+                <Flex 
+                    direction={{ base: "row", md: "column" }} 
+                    align={{ base: "center", md: "end" }} 
+                    justify={{ base: "space-between", md: "space-between" }} 
+                    h={{ base: "auto", md: "120px" }} 
+                    minH={{ base: "auto", md: "120px" }}
+                    w={{ base: "100%", md: "auto" }}
+                    mt={{ base: 2, md: 0 }}
+                >
                     {/* Heart Icon */}
                     <Box>
                         <Icon 
@@ -87,9 +107,9 @@ const HorizontalJobCard = ({ job }) => {
                         <Button
                             bg="red.400"
                             color="white"
-                            size="md"
+                            size={{ base: "sm", md: "md" }}
                             borderRadius="full"
-                            px={8}
+                            px={{ base: 6, md: 8 }}
                             _hover={{ bg: "red.500" }}
                             _focus={{ bg: "red.500" }}
                             boxShadow="0 2px 8px rgba(239, 68, 68, 0.3)"
@@ -98,7 +118,7 @@ const HorizontalJobCard = ({ job }) => {
                         </Button>
                     </Box>
                 </Flex>
-            </HStack>
+            </Flex>
         </Box>
     );
 };
