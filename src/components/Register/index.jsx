@@ -12,7 +12,10 @@ import {
     VStack,
     HStack,
     Text,
-    Divider, useToast,
+    Divider, 
+    useToast,
+    Spinner,
+    Flex,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faApple, faFacebook } from "@fortawesome/free-brands-svg-icons";
@@ -22,6 +25,7 @@ import {BASE_ROUTE} from "../../App.jsx";
 export const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const [userData, setUserdata] = useState({
         firstName: '',
@@ -32,6 +36,7 @@ export const Register = () => {
     });
 
     const handleLogin = async () => {
+        setIsLoading(true);
         try {
             const result = await authApi.signUp(userData.email, userData.password, {
                 firstName: userData.firstName,
@@ -62,9 +67,9 @@ export const Register = () => {
                 status: "error",
                 duration: 3000,
                 isClosable: true,
-            }
-            )
-          emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}`
+            });
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -123,8 +128,10 @@ export const Register = () => {
                     bg="red.500"
                     _hover={{ bg: "red.400" }}
                     onClick={handleLogin}
+                    isLoading={isLoading}
+                    loadingText="Se înregistrează..."
+                    isDisabled={isLoading}
                 >
-                    Inregistrează-te
                     Inregistrează-te
                 </Button>
 
@@ -160,6 +167,30 @@ export const Register = () => {
 
 
     return (
+        <>
+            {/* Loading Overlay */}
+            {isLoading && (
+                <Box
+                    position="fixed"
+                    top="0"
+                    left="0"
+                    width="100vw"
+                    height="100vh"
+                    bg="blackAlpha.600"
+                    zIndex="9999"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    <Flex direction="column" alignItems="center" color="white">
+                        <Spinner size="xl" thickness="4px" speed="0.65s" />
+                        <Text mt={4} fontSize="lg" fontWeight="medium">
+                            Se înregistrează contul...
+                        </Text>
+                    </Flex>
+                </Box>
+            )}
+            
         <Box
             display="flex"
             justifyContent="center"
@@ -170,6 +201,9 @@ export const Register = () => {
             backgroundImage="url('https://png.pngtree.com/background/20210711/original/pngtree-high-tech-business-meeting-year-end-meeting-poster-banner-picture-image_1110958.jpg')"
             backgroundSize="cover"
             backgroundPosition="center"
+            opacity={isLoading ? 0.3 : 1}
+            pointerEvents={isLoading ? "none" : "auto"}
+            transition="opacity 0.3s ease"
         >
             <Box
                 display="flex"
@@ -227,6 +261,7 @@ export const Register = () => {
                 </Box>
             </Box>
         </Box>
+        </>
     );
 }
 
