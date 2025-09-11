@@ -6,7 +6,7 @@ import {
 import { FaFilter, FaHeart, FaEye } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
 import { jobsApi } from '../../lib/supabase';
-import JobCard from "../JobCard/index.jsx";
+import HorizontalJobCard from "../HorizontalJobCard/index.jsx";
 
 export const JobsSearchPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -125,11 +125,11 @@ export const JobsSearchPage = () => {
                             {loading ? (
                                 <Text>Loading...</Text>
                             ) : (
-                                <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={4}>
+                                <VStack spacing={0} align="stretch">
                                     {jobs.map((job) => (
-                                        <JobCard key={job.id} job={job} />
+                                        <HorizontalJobCard key={job.id} job={job} />
                                     ))}
-                                </Grid>
+                                </VStack>
                             )}
 
                             {/* Pagination */}
