@@ -260,3 +260,5 @@ export const authApi = {
     return user
   }
 }
+
+export { companiesApi }
