@@ -50,7 +50,7 @@ export const Login = () => {
                     localStorage.setItem("token", session.access_token);
 
                     // Redirect to homepage
-                    window.location.href = "/";
+                    window.location.href = `${BASE_ROUTE}`;
                 } else {
                     toast({
                         title: "Profile Setup Required",
@@ -59,22 +59,22 @@ export const Login = () => {
                         duration: 3000,
                         isClosable: true,
                     });
-                    // Still allow login but redirect to profile setup
+                    // Still allow login but redirect to home page
                     localStorage.setItem("token", session.access_token);
-                    window.location.href = "/profile";
+                    window.location.href = `${BASE_ROUTE}`;
                 }
             } catch (profileError) {
                 console.error('Profile fetch error:', profileError);
                 toast({
-                    title: "Profile Setup Required", 
-                    description: "Please complete your profile setup.",
+                    title: "Login Successful", 
+                    description: "Welcome back!",
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
                 });
-                // Still allow login but redirect to profile setup
+                // Still allow login but redirect to home page
                 localStorage.setItem("token", session.access_token);
-                window.location.href = "/profile";
+                window.location.href = `${BASE_ROUTE}`;
             }
 
         } catch (error) {
