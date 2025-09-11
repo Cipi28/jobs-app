@@ -33,36 +33,58 @@ export const AppHeader = () => {
   const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
-    // Check for user in localStorage on component mount
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('user');
+    // Check for Supabase session in localStorage on component mount
+    const checkAuthState = () => {
+      const supabaseSession = localStorage.getItem('sb-rgicqozbjsluoxltqudp-auth-token');
+      if (supabaseSession) {
+        try {
+          const sessionData = JSON.parse(supabaseSession);
+          if (sessionData.user && sessionData.user.user_metadata) {
+            // Extract user data from Supabase session
+            const userData = {
+              id: sessionData.user.id,
+              email: sessionData.user.email,
+              first_name: sessionData.user.user_metadata.firstName || sessionData.user.user_metadata.first_name,
+              last_name: sessionData.user.user_metadata.lastName || sessionData.user.user_metadata.last_name,
+              city: sessionData.user.user_metadata.city
+            };
+            setUser(userData);
+          }
+        } catch (error) {
+          console.error('Error parsing Supabase session:', error);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
       }
-    }
+    };
+
+    checkAuthState();
 
     // Listen for storage changes (when user logs in/out in another tab)
     const handleStorageChange = (e) => {
-      if (e.key === 'user') {
-        if (e.newValue) {
-          try {
-            setUser(JSON.parse(e.newValue));
-          } catch (error) {
-            console.error('Error parsing user from storage event:', error);
-            setUser(null);
-          }
-        } else {
-          setUser(null);
-        }
+      if (e.key === 'sb-rgicqozbjsluoxltqudp-auth-token') {
+        checkAuthState();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  React.useEffect(() => {
+    // Also check for legacy user data format for backward compatibility
+    const legacyUser = localStorage.getItem('user');
+    if (legacyUser && !user) {
+      try {
+        const userData = JSON.parse(legacyUser);
+        setUser(userData);
+      } catch (error) {
+        console.error('Error parsing legacy user data:', error);
+        localStorage.removeItem('user');
+      }
+    }
+  }, [user]);
 
   const LinkItems = [
     { name: 'Acasa', icon: FiHome, href: `${BASE_ROUTE}` },
@@ -238,8 +260,10 @@ export const AppHeader = () => {
                       href="#"
                       onClick={async () => {
                         await authApi.signOut();
-                        localStorage.removeItem('user');
-                        localStorage.removeItem('token');
+                        // Clear all auth-related localStorage items
+                        localStorage.removeItem('sb-rgicqozbjsluoxltqudp-auth-token');
+                        localStorage.removeItem('user'); // legacy
+                        localStorage.removeItem('token'); // legacy
                         setUser(null);
                         window.history.pushState({}, '', `${BASE_ROUTE}login`);
                       }}
