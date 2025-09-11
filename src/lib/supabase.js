@@ -7,7 +7,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    flowType: 'pkce'
   }
 })
 
@@ -149,7 +150,8 @@ export const authApi = {
       email,
       password,
       options: {
-        data: userData
+        data: userData,
+        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}email-confirmation`
       }
     })
 

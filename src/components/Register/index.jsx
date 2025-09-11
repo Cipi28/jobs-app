@@ -42,17 +42,17 @@ export const Register = () => {
             // Check if user was created successfully
             if (result.user) {
                 toast({
-                    title: "Registration Successful",
-                    description: "Please check your email to confirm your account before logging in.",
+                    title: "Registration Successful", 
+                    description: "Redirecting to email confirmation page...",
                     status: "success",
-                    duration: 5000,
+                    duration: 2000,
                     isClosable: true,
                 });
 
-                // Redirect to login page
+                // Redirect to email confirmation page
                 setTimeout(() => {
-                    window.location.href = `${BASE_ROUTE}login`;
-                }, 2000);
+                    window.location.href = `${BASE_ROUTE}email-confirmation`;
+                }, 1500);
             }
         } catch (error) {
             console.error('Registration error:', error);

@@ -33,6 +33,33 @@ export const AppHeader = () => {
   const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
+    // Handle email confirmation redirect
+    const handleEmailConfirmation = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session && data.session.user && data.session.user.email_confirmed_at) {
+        // User is confirmed and logged in, redirect to home
+        const userData = {
+          id: data.session.user.id,
+          email: data.session.user.email,
+          first_name: data.session.user.user_metadata?.firstName || data.session.user.user_metadata?.first_name,
+          last_name: data.session.user.user_metadata?.lastName || data.session.user.user_metadata?.last_name,
+          city: data.session.user.user_metadata?.city
+        };
+        setUser(userData);
+        
+        // Save for compatibility
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("token", data.session.access_token);
+        
+        // Redirect to home if on email confirmation page
+        if (window.location.pathname.includes('email-confirmation')) {
+          window.location.href = `${BASE_ROUTE}`;
+        }
+      }
+    };
+
+    handleEmailConfirmation();
+
     // Check for Supabase session in localStorage on component mount
     const checkAuthState = () => {
       const supabaseSession = localStorage.getItem('sb-rgicqozbjsluoxltqudp-auth-token');
