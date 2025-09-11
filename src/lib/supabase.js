@@ -151,7 +151,7 @@ export const authApi = {
       password,
       options: {
         data: userData,
-        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}email-confirmation`
+        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}`
       }
     })
 
