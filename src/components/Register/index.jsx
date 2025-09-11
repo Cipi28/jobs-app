@@ -62,24 +62,14 @@ export const Register = () => {
         } catch (error) {
             console.error('Registration error:', error);
             
-            let errorMessage = "Registration failed";
-            
-            // Handle specific Supabase error for duplicate email
-            if (error.message && error.message.includes('User already registered')) {
-                errorMessage = "Această adresă de email este deja înregistrată. Te rugăm să folosești o altă adresă de email sau să te conectezi.";
-            } else if (error.message && error.message.includes('duplicate key value')) {
-                errorMessage = "Această adresă de email este deja înregistrată. Te rugăm să folosești o altă adresă de email sau să te conectezi.";
-            } else if (error.message && error.message.includes('already exists')) {
-                errorMessage = "Această adresă de email este deja înregistrată. Te rugăm să folosești o altă adresă de email sau să te conectezi.";
-            } else if (error.message) {
-                errorMessage = error.message;
-            }
+            // Use the error message directly from the API
+            const errorMessage = error.message || "Registration failed";
             
             toast({
                 title: "Registration Failed",
                 description: errorMessage,
                 status: "error",
-                duration: 3000,
+                duration: 5000,
                 isClosable: true,
             });
         } finally {

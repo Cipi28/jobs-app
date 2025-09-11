@@ -146,6 +146,17 @@ export const authApi = {
   async signUp(email, password, userData) {
     console.log('Starting signup process...', { email, userData });
     
+    // First check if user already exists in our users table
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle()
+
+    if (existingUser) {
+      throw new Error('Această adresă de email este deja înregistrată. Te rugăm să folosești o altă adresă de email sau să te conectezi.')
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -181,8 +192,11 @@ export const authApi = {
 
       if (profileError) {
         console.error('Profile creation error:', profileError);
-        // If profile creation fails, still return success but log the error
-        console.warn('Profile creation failed, but auth user was created');
+        // If profile creation fails due to duplicate, throw specific error
+        if (profileError.code === '23505' || profileError.message.includes('duplicate')) {
+          throw new Error('Această adresă de email este deja înregistrată. Te rugăm să folosești o altă adresă de email sau să te conectezi.')
+        }
+        throw new Error('Eroare la crearea profilului. Te rugăm să încerci din nou.')
       } else {
         console.log('Profile created successfully:', profileData);
       }
