@@ -143,6 +143,8 @@ export const companiesApi = {
 export const authApi = {
   // Sign up with email and password
   async signUp(email, password, userData) {
+    console.log('Starting signup process...', { email, userData });
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -151,10 +153,20 @@ export const authApi = {
       }
     })
 
-    if (error) throw error
+    if (error) {
+      console.error('Auth signup error:', error);
+      throw error;
+    }
+
+    console.log('Auth signup successful:', data);
 
     // Create user profile
     if (data.user) {
+      console.log('Creating user profile for:', data.user.id);
+      
+      // Wait a moment for the auth state to propagate
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const { error: profileError } = await supabase
         .from('users')
         .insert({
@@ -165,7 +177,12 @@ export const authApi = {
           city: userData.city
         })
 
-      if (profileError) throw profileError
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
+        throw profileError;
+      }
+      
+      console.log('Profile created successfully');
     }
 
     return data
