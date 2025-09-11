@@ -50,11 +50,6 @@ export const AppHeader = () => {
         // Save for compatibility
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("token", data.session.access_token);
-        
-        // Redirect to home if on email confirmation page
-        if (window.location.pathname.includes('email-confirmation')) {
-          window.location.href = `${BASE_ROUTE}`;
-        }
       }
     };
 
