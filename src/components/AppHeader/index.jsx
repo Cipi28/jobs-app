@@ -30,6 +30,40 @@ import {
 } from '@chakra-ui/react';
 
 export const AppHeader = () => {
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    // Check for user in localStorage on component mount
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('user');
+      }
+    }
+
+    // Listen for storage changes (when user logs in/out in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'user') {
+        if (e.newValue) {
+          try {
+            setUser(JSON.parse(e.newValue));
+          } catch (error) {
+            console.error('Error parsing user from storage event:', error);
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const LinkItems = [
     { name: 'Acasa', icon: FiHome, href: `${BASE_ROUTE}` },
     { name: 'Joburi', icon: FiActivity, href: `${BASE_ROUTE}jobs` },
@@ -103,10 +137,6 @@ export const AppHeader = () => {
   );
 
   const MobileNav = ({ onOpen, ...rest }) => {
-    //get user info from localstorage
-    const user = JSON.parse(localStorage.getItem('user'));
-    console.log("test", user);
-
     return (
         <Flex
             // ml={{ base: 0, md: 60 }}
@@ -210,6 +240,7 @@ export const AppHeader = () => {
                         await authApi.signOut();
                         localStorage.removeItem('user');
                         localStorage.removeItem('token');
+                        setUser(null);
                         window.history.pushState({}, '', `${BASE_ROUTE}login`);
                       }}
                   >
