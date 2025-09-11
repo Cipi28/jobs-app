@@ -7,6 +7,7 @@ import { FaFilter, FaHeart, FaEye } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
 import { jobsApi } from '../../lib/supabase';
 import HorizontalJobCard from "../HorizontalJobCard/index.jsx";
+import { FiltersSidebar } from "../FiltersSidebar/index.jsx";
 
 export const JobsSearchPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,6 +25,7 @@ export const JobsSearchPage = () => {
         department: '',
         workType: ''
     });
+    const [sidebarFilters, setSidebarFilters] = useState({});
 
     const searchJobs = async (page = 1) => {
         setLoading(true);
@@ -67,34 +69,10 @@ export const JobsSearchPage = () => {
                     <Grid templateColumns={{ base: "1fr", md: "1fr 3fr" }} gap={6}>
                         {/* Filters Section (Hidden on Mobile) */}
                         {!isMobile && (
-                            <Box bg="white" p={4} boxShadow="md" borderRadius="md">
-                                <Text fontWeight="bold">Salariu & Beneficii</Text>
-                                <Checkbox>Salarii</Checkbox>
-                                <Divider my={3} />
-
-                                <Text fontWeight="bold">Orașe</Text>
-                                <Checkbox>Remote (de acasă)</Checkbox>
-                                <Checkbox>Străinătate</Checkbox>
-                                <Checkbox>București</Checkbox>
-                                <Checkbox>Cluj-Napoca</Checkbox>
-                                <Checkbox>Timișoara</Checkbox>
-                                <Divider my={3} />
-
-                                <Text fontWeight="bold">Departamente</Text>
-                                <Select placeholder="ex: IT Software" bg="white" />
-                                <Checkbox>Achiziții</Checkbox>
-                                <Checkbox>Administrativ / Logistică</Checkbox>
-                                <Checkbox>Agricultură</Checkbox>
-                                <Checkbox>Alimentație / HoReCa</Checkbox>
-                                <Divider my={3} />
-
-                                <Text fontWeight="bold">Tipul jobului</Text>
-                                <Checkbox>Full time</Checkbox>
-                                <Checkbox>Part time</Checkbox>
-                                <Checkbox>Internship / Voluntariat</Checkbox>
-                                <Checkbox>Proiect / Sezonier</Checkbox>
-                                <Divider my={3} />
-                            </Box>
+                            <FiltersSidebar 
+                                onFiltersChange={setSidebarFilters}
+                                selectedFilters={sidebarFilters}
+                            />
                         )}
 
                         {/* Job Listings Section */}
@@ -156,6 +134,26 @@ export const JobsSearchPage = () => {
                     </Grid>
                 </VStack>
             </Container>
+            
+            {/* Mobile Filters Drawer */}
+            <Drawer
+                isOpen={isOpen}
+                placement="left"
+                onClose={onClose}
+                size="sm"
+            >
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton />
+                    <DrawerHeader>Filtre</DrawerHeader>
+                    <DrawerBody>
+                        <FiltersSidebar 
+                            onFiltersChange={setSidebarFilters}
+                            selectedFilters={sidebarFilters}
+                        />
+                    </DrawerBody>
+                </DrawerContent>
+            </Drawer>
         </Box>
     );
 };
