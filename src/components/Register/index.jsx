@@ -33,21 +33,29 @@ export const Register = () => {
 
     const handleLogin = async () => {
         try {
-            const { user, session } = await authApi.signUp(userData.email, userData.password, {
+            const result = await authApi.signUp(userData.email, userData.password, {
                 firstName: userData.firstName,
                 lastName: userData.lastName,
                 city: userData.city
             });
 
-            // Get user profile
-            const profile = await authApi.getUserProfile();
-            
-            // Save user data in localStorage for compatibility
-            localStorage.setItem("user", JSON.stringify(profile));
-            localStorage.setItem("token", session.access_token);
+            // Check if user was created successfully
+            if (result.user) {
+                toast({
+                    title: "Registration Successful",
+                    description: "Please check your email to confirm your account before logging in.",
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                });
 
-            window.location.href = "/";
+                // Redirect to login page
+                setTimeout(() => {
+                    window.location.href = `${BASE_ROUTE}login`;
+                }, 2000);
+            }
         } catch (error) {
+            console.error('Registration error:', error);
             toast({
                 title: "Registration Failed",
                 description: error.message || "Registration failed",

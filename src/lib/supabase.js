@@ -190,9 +190,9 @@ export const authApi = {
 
   // Get current user profile
   async getUserProfile() {
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
     
-    if (!user) return null
+    if (authError || !user) return null
 
     const { data, error } = await supabase
       .from('users')
@@ -200,7 +200,18 @@ export const authApi = {
       .eq('id', user.id)
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Error fetching user profile:', error)
+      return null
+    }
+    
     return data
+  },
+
+  // Check if user is authenticated
+  async getCurrentUser() {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) return null
+    return user
   }
 }

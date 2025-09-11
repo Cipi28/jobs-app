@@ -28,16 +28,45 @@ export const Login = () => {
         try {
             const { user, session } = await authApi.signIn(email, password);
 
-            // Get user profile
-            const profile = await authApi.getUserProfile();
-            
-            // Save user data in localStorage for compatibility
-            localStorage.setItem("user", JSON.stringify(profile));
-            localStorage.setItem("token", session.access_token);
+            // Check if email is confirmed
+            if (!user.email_confirmed_at) {
+                toast({
+                    title: "Email Not Confirmed",
+                    description: "Please check your email and click the confirmation link before logging in.",
+                    status: "warning",
+                    duration: 5000,
+                    isClosable: true,
+                });
+                return;
+            }
 
-            // Redirect to homepage
-            window.location.href = "/";
+            // Get user profile after successful login
+            try {
+                const profile = await authApi.getUserProfile();
+                
+                if (profile) {
+                    // Save user data in localStorage for compatibility
+                    localStorage.setItem("user", JSON.stringify(profile));
+                    localStorage.setItem("token", session.access_token);
+
+                    // Redirect to homepage
+                    window.location.href = "/";
+                } else {
+                    throw new Error("Could not load user profile");
+                }
+            } catch (profileError) {
+                console.error('Profile fetch error:', profileError);
+                toast({
+                    title: "Profile Error",
+                    description: "Login successful but could not load profile. Please try again.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+
         } catch (error) {
+            console.error('Login error:', error);
             toast({
                 title: "Login Failed",
                 description: error.message || "Invalid credentials",
