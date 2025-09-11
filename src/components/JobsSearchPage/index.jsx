@@ -130,7 +130,7 @@ export const JobsSearchPage = () => {
                                         <JobCard key={job.id} job={job} />
                                     ))}
                                 </Grid>
-                            ))}
+                            )}
 
                             {/* Pagination */}
                             {pagination.totalPages > 1 && (
