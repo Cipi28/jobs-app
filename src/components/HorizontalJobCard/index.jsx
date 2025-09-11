@@ -19,35 +19,35 @@ const HorizontalJobCard = ({ job }) => {
             bg="white"
             borderRadius="lg"
             boxShadow="md"
-            p={4}
+            p={6}
             mb={4}
             _hover={{ boxShadow: "lg", transform: "translateY(-2px)" }}
             transition="all 0.2s"
         >
-            <HStack spacing={4} align="start">
+            <HStack spacing={6} align="start" minH="120px">
                 {/* Job Image */}
                 <Box flexShrink={0}>
                     <Image
                         src={job.job_image || 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=150&h=100&fit=crop'}
                         alt={job.name}
-                        w="120px"
-                        h="80px"
+                        w="150px"
+                        h="100px"
                         objectFit="cover"
                         borderRadius="md"
                     />
                 </Box>
 
                 {/* Job Details */}
-                <VStack align="start" spacing={1} flex="1">
+                <VStack align="start" spacing={2} flex="1">
                     {/* Date */}
-                    <Text fontSize="sm" color="gray.500">
+                    <Text fontSize="md" color="gray.500">
                         {formatDate(job.created_at)}
                     </Text>
                     
                     {/* Job Title */}
                     <Link to={`${BASE_ROUTE}job/${job.id}`}>
                         <Text 
-                            fontSize="lg" 
+                            fontSize="xl" 
                             fontWeight="bold" 
                             color="gray.800"
                             _hover={{ color: "red.500" }}
@@ -58,18 +58,18 @@ const HorizontalJobCard = ({ job }) => {
                     </Link>
                     
                     {/* Company Name */}
-                    <Text fontSize="md" color="gray.700" fontWeight="medium">
+                    <Text fontSize="lg" color="gray.700" fontWeight="medium">
                         {job.company?.name || 'Company Name'}
                     </Text>
                     
                     {/* Location */}
-                    <Text fontSize="sm" color="blue.500" fontWeight="medium">
+                    <Text fontSize="md" color="blue.500" fontWeight="medium">
                         {job.location}
                     </Text>
                 </VStack>
 
                 {/* Right Side Actions */}
-                <Flex direction="column" align="end" justify="space-between" h="100px" minH="100px">
+                <Flex direction="column" align="end" justify="space-between" h="120px" minH="120px">
                     {/* Heart Icon */}
                     <Box>
                         <Icon 
@@ -78,6 +78,7 @@ const HorizontalJobCard = ({ job }) => {
                             cursor="pointer"
                             _hover={{ color: "red.500" }}
                             transition="color 0.2s"
+                            boxSize={5}
                         />
                     </Box>
                     
@@ -86,9 +87,9 @@ const HorizontalJobCard = ({ job }) => {
                         <Button
                             bg="red.400"
                             color="white"
-                            size="sm"
+                            size="md"
                             borderRadius="full"
-                            px={6}
+                            px={8}
                             _hover={{ bg: "red.500" }}
                             _focus={{ bg: "red.500" }}
                             boxShadow="0 2px 8px rgba(239, 68, 68, 0.3)"
