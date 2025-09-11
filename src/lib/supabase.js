@@ -165,9 +165,9 @@ export const authApi = {
       console.log('Creating user profile for:', data.user.id);
       
       // Wait a moment for the auth state to propagate
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      const { error: profileError } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('users')
         .insert({
           id: data.user.id,
@@ -179,10 +179,11 @@ export const authApi = {
 
       if (profileError) {
         console.error('Profile creation error:', profileError);
-        throw profileError;
+        // If profile creation fails, still return success but log the error
+        console.warn('Profile creation failed, but auth user was created');
+      } else {
+        console.log('Profile created successfully:', profileData);
       }
-      
-      console.log('Profile created successfully');
     }
 
     return data
@@ -215,10 +216,37 @@ export const authApi = {
       .from('users')
       .select('*')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error('Error fetching user profile:', error)
+      // If profile doesn't exist, create it from auth user data
+      if (error.code === 'PGRST116') {
+        console.log('Profile not found, creating from auth user data...')
+        try {
+          const { data: newProfile, error: createError } = await supabase
+            .from('users')
+            .insert({
+              id: user.id,
+              email: user.email,
+              first_name: user.user_metadata?.firstName || '',
+              last_name: user.user_metadata?.lastName || '',
+              city: user.user_metadata?.city || ''
+            })
+            .select()
+            .single()
+          
+          if (createError) {
+            console.error('Failed to create profile:', createError)
+            return null
+          }
+          
+          return newProfile
+        } catch (createError) {
+          console.error('Error creating profile:', createError)
+          return null
+        }
+      }
       return null
     }
     

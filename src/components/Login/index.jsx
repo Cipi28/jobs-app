@@ -52,17 +52,29 @@ export const Login = () => {
                     // Redirect to homepage
                     window.location.href = "/";
                 } else {
-                    throw new Error("Could not load user profile");
+                    toast({
+                        title: "Profile Setup Required",
+                        description: "Please complete your profile setup.",
+                        status: "warning",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                    // Still allow login but redirect to profile setup
+                    localStorage.setItem("token", session.access_token);
+                    window.location.href = "/profile";
                 }
             } catch (profileError) {
                 console.error('Profile fetch error:', profileError);
                 toast({
-                    title: "Profile Error",
-                    description: "Login successful but could not load profile. Please try again.",
-                    status: "error",
+                    title: "Profile Setup Required", 
+                    description: "Please complete your profile setup.",
+                    status: "warning",
                     duration: 3000,
                     isClosable: true,
                 });
+                // Still allow login but redirect to profile setup
+                localStorage.setItem("token", session.access_token);
+                window.location.href = "/profile";
             }
 
         } catch (error) {
