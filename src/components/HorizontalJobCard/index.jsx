@@ -69,7 +69,7 @@ const HorizontalJobCard = ({ job }) => {
                 </VStack>
 
                 {/* Right Side Actions */}
-                <VStack spacing={3} align="end" justify="space-between" h="full">
+                <Flex direction="column" align="end" justify="space-between" h="100px" minH="100px">
                     {/* Heart Icon */}
                     <Box>
                         <Icon 
@@ -96,7 +96,7 @@ const HorizontalJobCard = ({ job }) => {
                             Aplică rapid
                         </Button>
                     </Box>
-                </VStack>
+                </Flex>
             </HStack>
         </Box>
     );
