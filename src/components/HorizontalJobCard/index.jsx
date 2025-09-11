@@ -69,29 +69,33 @@ const HorizontalJobCard = ({ job }) => {
                 </VStack>
 
                 {/* Right Side Actions */}
-                <VStack spacing={3} align="end">
+                <VStack spacing={3} align="end" justify="space-between" h="full">
                     {/* Heart Icon */}
-                    <Icon 
-                        as={FaHeart} 
-                        color="gray.400" 
-                        cursor="pointer"
-                        _hover={{ color: "red.500" }}
-                        transition="color 0.2s"
-                    />
+                    <Box>
+                        <Icon 
+                            as={FaHeart} 
+                            color="gray.400" 
+                            cursor="pointer"
+                            _hover={{ color: "red.500" }}
+                            transition="color 0.2s"
+                        />
+                    </Box>
                     
                     {/* Apply Button */}
-                    <Button
-                        bg="red.400"
-                        color="white"
-                        size="sm"
-                        borderRadius="full"
-                        px={6}
-                        _hover={{ bg: "red.500" }}
-                        _focus={{ bg: "red.500" }}
-                        boxShadow="0 2px 8px rgba(239, 68, 68, 0.3)"
-                    >
-                        Aplică rapid
-                    </Button>
+                    <Box>
+                        <Button
+                            bg="red.400"
+                            color="white"
+                            size="sm"
+                            borderRadius="full"
+                            px={6}
+                            _hover={{ bg: "red.500" }}
+                            _focus={{ bg: "red.500" }}
+                            boxShadow="0 2px 8px rgba(239, 68, 68, 0.3)"
+                        >
+                            Aplică rapid
+                        </Button>
+                    </Box>
                 </VStack>
             </HStack>
         </Box>
