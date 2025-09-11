@@ -38,18 +38,42 @@ export const AppHeader = () => {
       const { data, error } = await supabase.auth.getSession();
       if (data.session && data.session.user && data.session.user.email_confirmed_at) {
         // User is confirmed and logged in, redirect to home
-        const userData = {
-          id: data.session.user.id,
-          email: data.session.user.email,
-          first_name: data.session.user.user_metadata?.firstName || data.session.user.user_metadata?.first_name,
-          last_name: data.session.user.user_metadata?.lastName || data.session.user.user_metadata?.last_name,
-          city: data.session.user.user_metadata?.city
-        };
-        setUser(userData);
-        
-        // Save for compatibility
-        localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("token", data.session.access_token);
+        try {
+          // Get the full user profile from the database
+          const profile = await authApi.getUserProfile();
+          
+          if (profile) {
+            // Use the complete profile data
+            setUser(profile);
+            localStorage.setItem("user", JSON.stringify(profile));
+            localStorage.setItem("token", data.session.access_token);
+          } else {
+            // Fallback to session data if profile doesn't exist
+            const userData = {
+              id: data.session.user.id,
+              email: data.session.user.email,
+              first_name: data.session.user.user_metadata?.firstName || data.session.user.user_metadata?.first_name,
+              last_name: data.session.user.user_metadata?.lastName || data.session.user.user_metadata?.last_name,
+              city: data.session.user.user_metadata?.city
+            };
+            setUser(userData);
+            localStorage.setItem("user", JSON.stringify(userData));
+            localStorage.setItem("token", data.session.access_token);
+          }
+        } catch (profileError) {
+          console.error('Error fetching profile after email confirmation:', profileError);
+          // Fallback to session data
+          const userData = {
+            id: data.session.user.id,
+            email: data.session.user.email,
+            first_name: data.session.user.user_metadata?.firstName || data.session.user.user_metadata?.first_name,
+            last_name: data.session.user.user_metadata?.lastName || data.session.user.user_metadata?.last_name,
+            city: data.session.user.user_metadata?.city
+          };
+          setUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
+          localStorage.setItem("token", data.session.access_token);
+        }
       }
     };
 
